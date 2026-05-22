@@ -1,3 +1,14 @@
+.leaderboard-status {
+  padding: 40px;
+  text-align: center;
+  color: #7f8c8d;
+  font-size: 16px;
+}
+
+.leaderboard-error {
+  color: #e74c3c;
+}
+
 .leaderboard {
   padding: 24px 32px;
   min-height: 100%;
@@ -79,6 +90,91 @@
   gap: 6px;
 }
 
+.filter-date--btn {
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.filter-date--btn:hover {
+  background: #bbdefb;
+}
+
+.month-picker-wrap {
+  position: relative;
+}
+
+.month-picker {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  padding: 12px;
+  z-index: 100;
+  min-width: 220px;
+}
+
+.month-picker-years {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.picker-year {
+  flex: 1;
+  padding: 6px;
+  border: 1px solid #d0d9e3;
+  border-radius: 6px;
+  background: white;
+  font-size: 13px;
+  font-weight: 600;
+  color: #4a5568;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.picker-year:hover {
+  border-color: #2196f3;
+  color: #2196f3;
+}
+
+.picker-year--active {
+  background: #2196f3;
+  border-color: #2196f3;
+  color: white;
+}
+
+.month-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+}
+
+.picker-month {
+  padding: 7px 4px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: #f8fafc;
+  font-size: 12px;
+  color: #4a5568;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: center;
+}
+
+.picker-month:hover {
+  border-color: #2196f3;
+  color: #2196f3;
+}
+
+.picker-month--active {
+  background: #2196f3;
+  color: white;
+  border-color: #2196f3;
+  font-weight: 600;
+}
+
 .filter-clear-btn {
   background: none;
   border: none;
@@ -141,6 +237,7 @@
   gap: 12px;
   overflow-x: auto;
   padding-bottom: 4px;
+  align-items: flex-end;
 }
 
 .top-card {
@@ -159,6 +256,18 @@
   border: 1.5px solid #f5c842;
   box-shadow: 0 4px 16px rgba(245, 166, 35, 0.25);
   min-width: 168px;
+  min-height: 260px;
+}
+
+.top-card--rank-1 .top-card-body {
+  padding: 16px 14px 20px;
+  gap: 10px;
+}
+
+.top-card--rank-1 .top-card-avatar {
+  width: 72px;
+  height: 72px;
+  font-size: 20px;
 }
 
 .top-card--rank-2 {
@@ -166,6 +275,18 @@
   border: 1.5px solid #b0bec5;
   box-shadow: 0 3px 10px rgba(144, 164, 174, 0.25);
   min-width: 158px;
+  min-height: 235px;
+}
+
+.top-card--rank-2 .top-card-body {
+  padding: 14px 14px 18px;
+  gap: 9px;
+}
+
+.top-card--rank-2 .top-card-avatar {
+  width: 62px;
+  height: 62px;
+  font-size: 17px;
 }
 
 .top-card--rank-3 {
@@ -173,6 +294,18 @@
   border: 1.5px solid #e8a87c;
   box-shadow: 0 2px 8px rgba(230, 126, 34, 0.2);
   min-width: 152px;
+  min-height: 215px;
+}
+
+.top-card--rank-3 .top-card-body {
+  padding: 13px 14px 16px;
+  gap: 8px;
+}
+
+.top-card--rank-3 .top-card-avatar {
+  width: 56px;
+  height: 56px;
+  font-size: 15px;
 }
 
 /* Banner */
@@ -233,6 +366,14 @@
   font-size: 15px;
 }
 
+.top-card-avatar--photo {
+  object-fit: cover;
+}
+
+.person-avatar--photo {
+  object-fit: cover;
+}
+
 .top-card-name {
   font-size: 13px;
   font-weight: 600;
@@ -245,6 +386,7 @@
   display: flex;
   justify-content: space-between;
   gap: 6px;
+  margin-top: auto;
 }
 
 .stat-box {
@@ -379,4 +521,13 @@
 .share-value {
   font-size: 13px;
   color: #4a5568;
+}
+
+.trend-neutral {
+  color: #95a5a6;
+  font-size: 13px;
+}
+
+.banner-trend--neutral {
+  color: rgba(255, 255, 255, 0.5);
 }
