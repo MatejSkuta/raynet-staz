@@ -85,27 +85,34 @@ app.get('/api/persons/stats/monthly', (req, res) => {
       });
     }
 
+    // Vypočítej předchozí měsíc
+    const [year, mon] = month.split('-').map(Number);
+    const prevDate = new Date(year, mon - 2); // -2 protože měsíce jsou 0-indexed
+    const prevMonth = `${prevDate.getFullYear()}-${String(prevDate.getMonth() + 1).padStart(2, '0')}`;
+
     const dataPath = path.join(process.cwd(), '../data/data.json');
     const rawData = fs.readFileSync(dataPath, 'utf-8');
     const jsonData: BusinessCaseResponse = JSON.parse(rawData);
 
-    const statsMap: Record<number, any> = {};
+    const currentMap: Record<number, any> = {};
+    const prevMap: Record<number, any> = {};
 
     for (const item of jsonData.data) {
       const owner = (item as any).owner;
       if (!owner) continue;
 
       const itemMonth = ((item as any).validFrom ?? '').slice(0, 7);
-      if (itemMonth !== month) continue;
+      if (itemMonth !== month && itemMonth !== prevMonth) continue;
 
       const id = owner.id;
-      if (!statsMap[id]) {
-        statsMap[id] = {
+      const targetMap = itemMonth === month ? currentMap : prevMap;
+
+      if (!targetMap[id]) {
+        targetMap[id] = {
           id,
           fullName: owner.fullName,
           email: owner['contactInfo.email'] ?? null,
           photo: owner.photo ? {
-            fileName: owner.photo.fileName,
             uuid: owner.photo.uuid,
             iconSmallUuid: owner.photo.iconSmallUuid,
             iconMediumUuid: owner.photo.iconMediumUuid,
@@ -121,7 +128,7 @@ app.get('/api/persons/stats/monthly', (req, res) => {
         };
       }
 
-      const stat = statsMap[id];
+      const stat = targetMap[id];
       stat.totalDeals++;
       stat.totalAmountCZK += (item as any).totalAmountInDefaultCurrency ?? 0;
       stat.totalProfit += (item as any).tradingProfit ?? 0;
@@ -137,11 +144,29 @@ app.get('/api/persons/stats/monthly', (req, res) => {
       }
     }
 
-    const result = Object.values(statsMap).sort(
-      (a, b) => b.wonAmountCZK - a.wonAmountCZK
-    );
+    const result = Object.values(currentMap).map(owner => {
+      const prev = prevMap[owner.id];
+      const prevWon = prev?.wonAmountCZK ?? 0;
+      const currWon = owner.wonAmountCZK;
 
-    res.json({ month, totalOwners: result.length, data: result });
+      let trend: number | null = null;
+      if (prevWon === 0 && currWon === 0) {
+        trend = 0;
+      } else if (prevWon === 0) {
+        trend = 100; // minulý měsíc nic, teď něco = +100%
+      } else {
+        trend = Math.round(((currWon - prevWon) / prevWon) * 100);
+      }
+
+      return {
+        ...owner,
+        trend,          
+        prevMonth,
+        prevWonAmountCZK: prevWon,
+      };
+    }).sort((a, b) => b.wonAmountCZK - a.wonAmountCZK);
+
+    res.json({ month, prevMonth, totalOwners: result.length, data: result });
   } catch (error) {
     res.status(500).json({ message: 'Error', error: String(error) });
   }
