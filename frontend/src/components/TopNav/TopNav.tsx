@@ -6,7 +6,7 @@ const TABS = [
   { id: 'leady', label: 'Leady' },
   { id: 'nastednka-leadu', label: 'Nástěnka leadů' },
   { id: 'zebricek', label: 'Žebříček obchodníků', active: true },
-  { id: 'prilezitosti', label: 'Snapřejí příležitosti' },
+  { id: 'prilezitosti', label: 'Stagnující' },
 ];
 
 export function TopNav() {

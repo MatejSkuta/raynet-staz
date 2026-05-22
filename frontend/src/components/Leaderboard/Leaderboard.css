@@ -144,38 +144,74 @@
 }
 
 .top-card {
-  background: white;
   border-radius: 10px;
-  padding: 14px;
   min-width: 148px;
   flex: 1;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 8px;
+  overflow: hidden;
+  background: white;
 }
 
-.top-card-header {
-  width: 100%;
+.top-card--rank-1 {
+  background: linear-gradient(160deg, #fffbea 0%, #fef3c7 100%);
+  border: 1.5px solid #f5c842;
+  box-shadow: 0 4px 16px rgba(245, 166, 35, 0.25);
+  min-width: 168px;
+}
+
+.top-card--rank-2 {
+  background: linear-gradient(160deg, #f9fafb 0%, #f0f2f5 100%);
+  border: 1.5px solid #b0bec5;
+  box-shadow: 0 3px 10px rgba(144, 164, 174, 0.25);
+  min-width: 158px;
+}
+
+.top-card--rank-3 {
+  background: linear-gradient(160deg, #fff8f2 0%, #fdebd0 100%);
+  border: 1.5px solid #e8a87c;
+  box-shadow: 0 2px 8px rgba(230, 126, 34, 0.2);
+  min-width: 152px;
+}
+
+/* Banner */
+.top-card-banner {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 8px 12px;
+  background: #607d8b;
 }
 
-.rank-badge {
+.top-card--rank-1 .top-card-banner { background: #d4940a; }
+.top-card--rank-2 .top-card-banner { background: #7a8d9a; }
+.top-card--rank-3 .top-card-banner { background: #b5652a; }
+
+.banner-rank {
   font-size: 10px;
   font-weight: 700;
-  padding: 3px 8px;
-  border-radius: 4px;
   color: white;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.4px;
 }
 
-.rank-gold    { background: #f5a623; }
-.rank-silver  { background: #95a5a6; }
-.rank-bronze  { background: #e67e22; }
-.rank-default { background: #78909c; }
+.banner-trend {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.banner-trend--up   { color: #b8f0c8; }
+.banner-trend--down { color: #ffd0d0; }
+
+/* Card body */
+.top-card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px 14px;
+  flex: 1;
+}
 
 .trend {
   font-size: 12px;
@@ -208,13 +244,18 @@
   width: 100%;
   display: flex;
   justify-content: space-between;
-  gap: 4px;
+  gap: 6px;
 }
 
-.stat {
+.stat-box {
+  flex: 1;
+  background: white;
+  border-radius: 8px;
+  padding: 8px 6px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .stat-value {
@@ -225,7 +266,7 @@
 }
 
 .stat-value--sm {
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .stat-label {

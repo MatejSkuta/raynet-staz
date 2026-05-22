@@ -11,7 +11,7 @@ interface Salesperson {
 }
 
 const MOCK_DATA: Salesperson[] = [
-  { id: 1, name: 'Petra Nováková',      initials: 'PN', color: '#e91e63', deals: 46, value: 2500000, trend:  2.1 },
+  { id: 1, name: 'Petra Nováková',      initials: 'PN', color: '#e91e63', deals: 45, value: 2500000, trend:  2.1 },
   { id: 2, name: 'Martin Dvořák',       initials: 'MD', color: '#2196f3', deals: 38, value: 2100000, trend:  4.0 },
   { id: 3, name: 'Jana Horáková',       initials: 'JH', color: '#9c27b0', deals: 31, value: 1850000, trend: -1.3 },
   { id: 4, name: 'Tomáš Procházka',     initials: 'TP', color: '#ff9800', deals: 26, value: 1620000, trend:  6.8 },
@@ -23,11 +23,6 @@ const MOCK_DATA: Salesperson[] = [
   { id: 10, name: 'Radek Novotný',      initials: 'RN', color: '#3f51b5', deals: 12, value:  580000, trend:  4.1 },
 ];
 
-const RANK_BADGE: Record<number, string> = {
-  1: 'rank-gold',
-  2: 'rank-silver',
-  3: 'rank-bronze',
-};
 
 function formatValue(value: number): string {
   return new Intl.NumberFormat('cs-CZ').format(value);
@@ -73,25 +68,27 @@ export function Leaderboard() {
           {top6.map((person, i) => {
             const rank = i + 1;
             return (
-              <div key={person.id} className="top-card">
-                <div className="top-card-header">
-                  <span className={`rank-badge ${RANK_BADGE[rank] ?? 'rank-default'}`}>
-                    {rank}. MÍSTO
+              <div key={person.id} className={`top-card top-card--rank-${rank}`}>
+                <div className="top-card-banner">
+                  <span className="banner-rank">{rank}. MÍSTO</span>
+                  <span className={`banner-trend ${person.trend >= 0 ? 'banner-trend--up' : 'banner-trend--down'}`}>
+                    {person.trend >= 0 ? '▲' : '▼'} {Math.abs(person.trend)}%
                   </span>
-                  <TrendBadge value={person.trend} />
                 </div>
-                <div className="top-card-avatar" style={{ backgroundColor: person.color }}>
-                  {person.initials}
-                </div>
-                <div className="top-card-name">{person.name}</div>
-                <div className="top-card-stats">
-                  <div className="stat">
-                    <span className="stat-value">{person.deals}</span>
-                    <span className="stat-label">dealy</span>
+                <div className="top-card-body">
+                  <div className="top-card-avatar" style={{ backgroundColor: person.color }}>
+                    {person.initials}
                   </div>
-                  <div className="stat">
-                    <span className="stat-value stat-value--sm">{formatValue(person.value)}</span>
-                    <span className="stat-label">Kč</span>
+                  <div className="top-card-name">{person.name}</div>
+                  <div className="top-card-stats">
+                    <div className="stat-box">
+                      <span className="stat-value">{person.deals}</span>
+                      <span className="stat-label">dealy</span>
+                    </div>
+                    <div className="stat-box">
+                      <span className="stat-value stat-value--sm">{formatValue(person.value)}</span>
+                      <span className="stat-label">Kč</span>
+                    </div>
                   </div>
                 </div>
               </div>
