@@ -1,29 +1,33 @@
 import './Sidebar.css';
 
+const NAV_ITEMS = [
+  { id: 'dashboard',   icon: '⊞', title: 'Nástěnka' },
+  { id: 'contacts',    icon: '👥', title: 'Kontakty' },
+  { id: 'leads',       icon: '◎', title: 'Leady' },
+  { id: 'deals',       icon: '💼', title: 'Dealy' },
+  { id: 'leaderboard', icon: '📊', title: 'Žebříček', active: true },
+  { id: 'calendar',    icon: '📅', title: 'Kalendář' },
+];
 
 export function Sidebar() {
-  const buttons = [
-    { id: 'search', icon: '🔍', title: 'Search' },
-    { id: 'settings', icon: '⚙️', title: 'Settings' },
-    { id: 'home', icon: '🏠', title: 'Home' },
-    { id: 'add', icon: '➕', title: 'Add' },
-    { id: 'profile', icon: '👤', title: 'Profile' },
-  ];
-
-
-
   return (
     <div className="sidebar">
-      {buttons.map((btn) => (
-        <button
-          key={btn.id}
-          className="sidebar-btn"
-          title={btn.title}
-          onClick={() => {}}
-        >
-          {btn.icon}
-        </button>
-      ))}
+      <div className="sidebar-logo">R</div>
+      <nav className="sidebar-nav">
+        {NAV_ITEMS.map(item => (
+          <button
+            key={item.id}
+            className={`sidebar-btn${item.active ? ' sidebar-btn--active' : ''}`}
+            title={item.title}
+          >
+            {item.icon}
+          </button>
+        ))}
+      </nav>
+      <div className="sidebar-bottom">
+        <button className="sidebar-btn" title="Nastavení">⚙️</button>
+        <div className="sidebar-user">FH</div>
+      </div>
     </div>
   );
 }
