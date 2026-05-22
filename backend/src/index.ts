@@ -82,7 +82,6 @@ app.get('/api/persons/stats/monthly', (req, res) => {
     if (!month || typeof month !== 'string' || !/^\d{4}-\d{2}$/.test(month)) {
       return res.status(400).json({
         message: 'Zadej parametr month ve formátu YYYY-MM, např. ?month=2026-06',
-        status: 'error'
       });
     }
 
@@ -90,33 +89,28 @@ app.get('/api/persons/stats/monthly', (req, res) => {
     const rawData = fs.readFileSync(dataPath, 'utf-8');
     const jsonData: BusinessCaseResponse = JSON.parse(rawData);
 
-    const statsMap: Record<number, {
-      id: number;
-      fullName: string;
-      email: string | null;
-      totalDeals: number;
-      wonDeals: number;
-      lostDeals: number;
-      activeDeals: number;
-      totalAmountCZK: number;
-      wonAmountCZK: number;
-      totalProfit: number;
-    }> = {};
+    const statsMap: Record<number, any> = {};
 
     for (const item of jsonData.data) {
-      const person = (item as any).person;
-      if (!person) continue;
+      const owner = (item as any).owner;
+      if (!owner) continue;
 
       const itemMonth = ((item as any).validFrom ?? '').slice(0, 7);
-      if (itemMonth !== month) continue; // filtrujeme jen zadaný měsíc
+      if (itemMonth !== month) continue;
 
-      const id = person.id;
-
+      const id = owner.id;
       if (!statsMap[id]) {
         statsMap[id] = {
           id,
-          fullName: person.fullName,
-          email: person['contactInfo.email'] ?? null,
+          fullName: owner.fullName,
+          email: owner['contactInfo.email'] ?? null,
+          photo: owner.photo ? {
+            fileName: owner.photo.fileName,
+            uuid: owner.photo.uuid,
+            iconSmallUuid: owner.photo.iconSmallUuid,
+            iconMediumUuid: owner.photo.iconMediumUuid,
+            contentType: owner.photo.contentType,
+          } : null,
           totalDeals: 0,
           wonDeals: 0,
           lostDeals: 0,
@@ -128,20 +122,17 @@ app.get('/api/persons/stats/monthly', (req, res) => {
       }
 
       const stat = statsMap[id];
-      const amountCZK = (item as any).totalAmountInDefaultCurrency ?? 0;
-      const profit = (item as any).tradingProfit ?? 0;
-      const status = (item as any).status;
-
       stat.totalDeals++;
-      stat.totalAmountCZK += amountCZK;
-      stat.totalProfit += profit;
+      stat.totalAmountCZK += (item as any).totalAmountInDefaultCurrency ?? 0;
+      stat.totalProfit += (item as any).tradingProfit ?? 0;
 
+      const status = (item as any).status;
       if (status === 'E_WIN') {
         stat.wonDeals++;
-        stat.wonAmountCZK += amountCZK;
+        stat.wonAmountCZK += (item as any).totalAmountInDefaultCurrency ?? 0;
       } else if (status === 'F_LOST') {
         stat.lostDeals++;
-      } else if (status === 'B_ACTIVE') {
+      } else {
         stat.activeDeals++;
       }
     }
@@ -150,11 +141,7 @@ app.get('/api/persons/stats/monthly', (req, res) => {
       (a, b) => b.wonAmountCZK - a.wonAmountCZK
     );
 
-    res.json({
-      month,
-      totalPersons: result.length,
-      data: result
-    });
+    res.json({ month, totalOwners: result.length, data: result });
   } catch (error) {
     res.status(500).json({ message: 'Error', error: String(error) });
   }
